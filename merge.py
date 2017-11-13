@@ -1,6 +1,7 @@
 """This file includes functionality to merge data with PNG file."""
 
 import struct
+import png
 
 
 def encode_in_pixel(byte, pixel):
@@ -31,3 +32,21 @@ def decode_from_pixel(pixel):
 
     result = r + (g << 2) + (b << 4) + (a <<6)
     return struct.pack("B", result)
+
+
+def encode(image, data, filename, encryption=False, password=""):
+    im = Image.open(image)
+    px = im.load()
+
+    #Create a header
+    header = Header()
+    header.size = len(data)
+    header.fformat = "" if (len(filename.split(os.extsep))<2)\
+                     else filename.split(os.extsep)[1]
+
+    #Add the header to the file data
+    headerdata = struct.pack("4s"+\
+                             "I"+\
+                             str(Header.MAX_FORMAT_LENGTH)+"s",\
+                             header.magicnum, header.size, header.fformat)
+    filebytes = headerdata + data
