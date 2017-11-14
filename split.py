@@ -23,7 +23,7 @@ def split(_File_to_Split, _Dir_To_Wtite_to, _chunk_Size=_chunk_Size):
     return _Number_of_Chunks
 if __name__ == '__main__':
     if len(sys.argv) == 2 and sys.argv[1] == '-help':                   # if the argumet is not enough          
-        print 'Use: split.py [file to split target dir [_chunk_Size]]'  # print the help message 
+        print 'Usage: split.py file target_dir [_chunk_Size]'  # print the help message 
     else:
         if len(sys.argv) < 3:                                           # if the fucking user didn't specify 3 aurg 
             _Interactive_Mode = 1
