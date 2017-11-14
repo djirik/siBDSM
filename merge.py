@@ -1,8 +1,8 @@
 """This file includes functionality to merge data with PNG file."""
 
 import struct
-import png
-
+from PIL import Image
+import os
 
 def encode_in_pixel(byte, pixel):
     """Encodes a byte in the two least significant bits of each channel.
@@ -19,6 +19,13 @@ def encode_in_pixel(byte, pixel):
              b+(pixel[2] & 252),
              a+(pixel[3] & 252))
     return color
+
+
+class Header:
+    MAX_FORMAT_LENGTH=8
+    magicnum = "hide"
+    size = 0
+    fformat = "txt"
 
 
 def decode_from_pixel(pixel):
@@ -38,15 +45,15 @@ def encode(image, data, filename, encryption=False, password=""):
     im = Image.open(image)
     px = im.load()
 
-    #Create a header
+    # Create a header
     header = Header()
     header.size = len(data)
     header.fformat = "" if (len(filename.split(os.extsep))<2)\
                      else filename.split(os.extsep)[1]
 
-    #Add the header to the file data
-    headerdata = struct.pack("4s"+\
-                             "I"+\
+    # Add the header to the file data
+    header_data = struct.pack("4s" +
+                             "I" +
                              str(Header.MAX_FORMAT_LENGTH)+"s",\
                              header.magicnum, header.size, header.fformat)
-    filebytes = headerdata + data
+    filebytes = header_data + data
