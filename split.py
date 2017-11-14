@@ -23,23 +23,23 @@ def split(_File_to_Split, _Dir_To_Wtite_to, _chunk_Size=_chunk_Size):
     return _Number_of_Chunks
 if __name__ == '__main__':
     if len(sys.argv) == 2 and sys.argv[1] == '-help':                   # if the argumet is not enough          
-        print 'Usage: split.py file target_dir [_chunk_Size]'  # print the help message 
+        print('Usage: split.py file target_dir [_chunk_Size]')  # print the help message 
     else:
         if len(sys.argv) < 3:                                           # if the fucking user didn't specify 3 aurg 
             _Interactive_Mode = 1
-            _File_to_Split = raw_input('File to be split? ')            # display the help message 
-            _Dir_To_Wtite_to = raw_input('Directory to store part files? ')
+            _File_to_Split = input('File to be split? ')            # display the help message 
+            _Dir_To_Wtite_to = input('Directory to store part files? ')
         else:                                                           # user is using the program correctly
             _Interactive_Mode = 0
             _File_to_Split, _Dir_To_Wtite_to = sys.argv[1:3]            # 1 = file, 2 = dir
             if len(sys.argv) == 4: _chunk_Size = int(sys.argv[3])       # user specify the chunk size      
         _File_Name, _dir = map(os.path.abspath, [_File_to_Split, _Dir_To_Wtite_to])
-        print 'Splitting', _File_Name, 'to', _dir, 'by', _chunk_Size
+        print("Splitting " + str(_File_Name) + " to " + str(_dir) + " by " + str(_chunk_Size))
         try:
             _Num_of_Parts = split(_File_to_Split, _Dir_To_Wtite_to, _chunk_Size)    # Get the number of parts
         except:                                                         # Error Message
-            print 'Error during split:'
-            print sys.exc_type, sys.exc_value
+            print('Error during split:')
+            print(sys.exc_type, sys.exc_value)
         else:                                                           # Everything is ok
-            print 'Split finished:', _Num_of_Parts, '_Num_of_Parts are in', _dir
-        if _Interactive_Mode: raw_input('Press Enter key')              # If Interactive, display the final message
+            print('Split finished: ' + str(_Num_of_Parts) + ' _Num_of_Parts are in ' + str(_dir))
+        if _Interactive_Mode: input('Press Enter key')              # If Interactive, display the final message
