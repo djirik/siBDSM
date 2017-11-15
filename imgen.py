@@ -1,11 +1,15 @@
 from PIL import Image
 import os
-size = (1000, 1000)
-im = Image.new('RGB', size)
-def ran():
-    return os.urandom(1000*1000) 
-pixels = zip(ran(), ran(), ran())
-im.putdata(list(pixels))
-im.save("imagedone.png")
 
-#im.show()
+
+def get_image(height, width):
+    size = (height, width)
+    im = Image.new('RGB', size)
+
+    def ran():
+        return os.urandom(height*width)
+
+    pixels = zip(ran(), ran(), ran())
+    im.putdata(list(pixels))
+
+    return im
