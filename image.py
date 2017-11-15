@@ -57,3 +57,13 @@ def encode(image, data, filename):
                              str(Header.MAX_FORMAT_LENGTH)+"s",
                              header.magicnum, header.size, header.fformat)
     filebytes = header_data + data
+
+    for i in range(len(filebytes)):
+        coords = (i % im.width, i / im.width)
+
+        byte = ord(filebytes[i])
+
+        px[coords[0], coords[1]] = encode_in_pixel(byte, px[coords[0], coords[1]])
+
+    return im
+
