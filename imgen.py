@@ -13,3 +13,4 @@ def get_image(height, width):
     im.putdata(list(pixels))
 
     return im
+
