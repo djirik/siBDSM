@@ -1,3 +1,4 @@
 pypng
 pycryptodome
 pillow
+numpy
