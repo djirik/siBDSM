@@ -1,4 +1,7 @@
 from numpy import *
+from pylab import *
+import time
+import sys
 
 def julia(n, m, itermax, xmin, xmax, ymin, ymax, name):
     """
@@ -51,12 +54,10 @@ def julia(n, m, itermax, xmin, xmax, ymin, ymax, name):
         ttimg = imshow(timg.T, origin='lower left')
         ttimg.write_png(name+'_'+str(i)+'.png')
         # ttimg.write_png(name+'_'+str(i)+'.png', noscale=True)
-    return timg
+    return ttimg
  
 if __name__=='__main__':
-    from pylab import *
-    import time
-    import sys
+
     if( len(sys.argv) > 1 ):
         name = str(sys.argv[1])
     else:
@@ -66,7 +67,7 @@ if __name__=='__main__':
         # start = time.time()
         I = julia(800, 800, 100, -2, 2, -2, 2, name)  
         # print 'Time taken:', time.time()-start
-        I[I==0] = 101
+        I[I == 0] = 101
         img = imshow(I.T, origin='lower left')
         img.write_png(name+'.png')
         del I, img

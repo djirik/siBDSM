@@ -2,3 +2,5 @@ pypng
 pycryptodome
 pillow
 numpy
+scipy
+matplotlib
