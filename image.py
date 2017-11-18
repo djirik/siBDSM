@@ -5,6 +5,13 @@ from PIL import Image
 import os
 
 
+class Header:
+    MAX_FORMAT_LENGTH = 8
+    magicnum = "hide"
+    size = 0
+    fformat = "txt"
+
+
 def encode_in_pixel(byte, pixel):
     """Encodes a byte in the two least significant bits of each channel.
     A 4-channel pixel is needed, which should be a tuple of 4 values from 0 to
@@ -20,13 +27,6 @@ def encode_in_pixel(byte, pixel):
              b+(pixel[2] & 252),
              a+(pixel[3] & 252))
     return color
-
-
-class Header:
-    MAX_FORMAT_LENGTH = 8
-    magicnum = "hide"
-    size = 0
-    fformat = "txt"
 
 
 def decode_from_pixel(pixel):
@@ -67,3 +67,37 @@ def encode(image, data, filename):
 
     return im
 
+
+def decode(image, password=""):
+    im = Image.open(image)
+    px = im.load()
+
+    data = ""
+
+    # Decode the contents of the hidden data
+    for i in range(im.height):
+        for j in range(im.width):
+            data += decode_from_pixel(px[j, i])
+
+    # Create the header for reading
+    header = Header()
+
+    headerdata = struct.unpack("4s" +
+                               "I" +
+                               str(Header.MAX_FORMAT_LENGTH)+"s",
+                                data[:4+4+Header.MAX_FORMAT_LENGTH])
+
+    header.magicnum = headerdata[0]
+    header.size = headerdata[1]
+    header.fformat = headerdata[2].strip("\x00")
+
+    # Verify integrity of recovered data
+    if header.magicnum != Header.magicnum:
+        print("There is no data to recover, quitting")
+        exit()
+
+    data = data[4+Header.MAX_FORMAT_LENGTH:4+Header.MAX_FORMAT_LENGTH+header.size]
+
+    print("Saving decoded output as {}".format("output"+os.extsep+header.fformat))
+    with open("output"+os.extsep+header.fformat, 'wb') as outf:
+        outf.write(data)
