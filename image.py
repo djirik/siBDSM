@@ -58,6 +58,11 @@ def encode(image, data, filename):
                              header.magicnum, header.size, header.fformat)
     filebytes = header_data + data
 
+    if len(filebytes) > im.width * im.height:
+        print("Image too small to encode the file. \
+      You can store 1 byte per pixel.")
+        exit()
+
     for i in range(len(filebytes)):
         coords = (i % im.width, i / im.width)
 
@@ -65,10 +70,12 @@ def encode(image, data, filename):
 
         px[coords[0], coords[1]] = encode_in_pixel(byte, px[coords[0], coords[1]])
 
+    im.save("output.png", "PNG")
+
     return im
 
 
-def decode(image, password=""):
+def decode(image):
     im = Image.open(image)
     px = im.load()
 
@@ -101,3 +108,7 @@ def decode(image, password=""):
     print("Saving decoded output as {}".format("output"+os.extsep+header.fformat))
     with open("output"+os.extsep+header.fformat, 'wb') as outf:
         outf.write(data)
+
+
+def save_image(image, filename):
+    image.save(filename, "PNG")
