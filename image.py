@@ -42,10 +42,12 @@ def decode_from_pixel(pixel):
     return struct.pack("B", result)
 
 
-def encode(image, data, filename):
-    im = Image.open(image)
+def encode(image_file, filename):
+    im = Image.open(image_file)
     px = im.load()
 
+    f = open(filename, "rb")
+    data = f.read()
     # Create a header
     header = Header()
     header.size = len(data)
@@ -112,3 +114,7 @@ def decode(image):
 
 def save_image(image, filename):
     image.save(filename, "PNG")
+
+
+def encode_and_save(image: Image, data_file: str, save_file: str):
+    save_image(encode(image, data_file), save_file)

@@ -1,9 +1,11 @@
 from PIL import Image
 import random
+
+
 # image size
-def get_image(imgx, imgy):
-    imgx = 512
-    imgy = 512
+def get_image(imgx=512, imgy=512):
+    #imgx = 512
+    #imgy = 512
     im = Image.new("RGB", (imgx, imgy))
 
     # drawing area
@@ -39,3 +41,10 @@ def get_image(imgx, imgy):
             im.putpixel((x, y), (i % 8 * 32, i % 16 * 16, i % 32 * 8))
     return im
     #im.save("juliaFr.png", "PNG")
+
+
+def get_images(width=512, height=512, amount=1):
+    images = []
+    for i in range(1, amount):
+        images.append(get_image(width, height))
+    return images
