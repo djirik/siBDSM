@@ -4,17 +4,17 @@ import sys, os
 # _chunk_Size = int(1.4 * 1000 * 1024)                            # Size of _Chunk_From_File
 
 
-def split(file_to_split, dir_to_write, chunk_size):
-    if not os.path.exists(dir_to_write):                    # if the dir is not exist
-        os.mkdir(dir_to_write)                              # then create it
-    else:
-        for fname in os.listdir(dir_to_write):              # if there are files in the directory
-            os.remove(os.path.join(dir_to_write, fname))    # Delete them
+def split(file_to_split, chunk_size):
+    # if not os.path.exists(dir_to_write):                    # if the dir is not exist
+    #     os.mkdir(dir_to_write)                              # then create it
+    # else:
+    #     for fname in os.listdir(dir_to_write):              # if there are files in the directory
+    #         os.remove(os.path.join(dir_to_write, fname))    # Delete them
     number_of_chunks = 0
-    input = open(file_to_split, 'rb')                          # open file as binary
+    f = open(file_to_split, 'rb')                          # open file as binary
     _chunks = []
     while 1:                                                    # start spliting
-        _Chunk_From_File = input.read(chunk_size)              # read file at the size of the Chunk
+        _Chunk_From_File = f.read(chunk_size)              # read file at the size of the Chunk
         if not _Chunk_From_File: break
         _chunks.append(_Chunk_From_File)
 
@@ -24,7 +24,7 @@ def split(file_to_split, dir_to_write, chunk_size):
         # _File_To_Write_to = open(_Name_of_The_file, 'wb')              # Open the file in write binary mode
         # _File_To_Write_to.write(_Chunk_From_File)                       # Write to the file
         # _File_To_Write_to.close()                                       # close the file
-    input.close()
+    f.close()
     assert number_of_chunks <= 9999                                    # join sort fails if 5 digits
     return number_of_chunks, _chunks
 

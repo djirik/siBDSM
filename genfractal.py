@@ -1,12 +1,13 @@
 from PIL import Image
 import random
-
+import numpy as np
 
 # image size
 def get_image(imgx=512, imgy=512):
-    #imgx = 512
-    #imgy = 512
+    # imgx = 512
+    # imgy = 512
     im = Image.new("RGBA", (imgx, imgy))
+    #im_as_array = np.zeros((imgy, imgx), dtype=(b))
 
     # drawing area
     xa = -2.0
@@ -39,12 +40,13 @@ def get_image(imgx=512, imgy=512):
                     break 
                 z = z * z + c
             im.putpixel((x, y), (i % 16 * 32, i % 32 * 16, i % 8 * 16, i % 32 * 8))
+            #im_as_array
     return im
     #im.save("juliaFr.png", "PNG")
 
 
 def get_images(width=512, height=512, amount=1):
     images = []
-    for i in range(1, amount):
+    for i in range(amount):
         images.append(get_image(width, height))
     return images

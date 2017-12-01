@@ -42,7 +42,7 @@ def decode_from_pixel(pixel):
     return struct.pack("B", result)
 
 
-def encode(image_file, filename):
+def encode_file(image_file, filename):
     im = Image.open(image_file)
     px = im.load()
 
@@ -77,11 +77,43 @@ def encode(image_file, filename):
     return im
 
 
+def encode(image_bytes: Image.Image, filebytes):
+    # im = Image.open(image_file)
+    px = image_bytes.load()
+
+    data = filebytes
+    # Create a header
+    header = Header()
+    header.size = len(data)
+    header.fformat = "txt"
+
+    # Add the header to the file data
+    header_data = struct.pack("4s" +
+                             "I" + str(Header.MAX_FORMAT_LENGTH)+"s", str(header.magicnum).encode(), header.size, str(header.fformat).encode())
+    filebytes = header_data + data
+
+    if len(filebytes) > image_bytes.width * image_bytes.height:
+        print("Image too small to encode the file. \
+      You can store 1 byte per pixel.")
+        exit()
+
+    for i in range(len(filebytes)):
+        coords = (i % image_bytes.width,int(i / image_bytes.width))
+        tmp = filebytes[i]
+        # byte = ord(tmp)
+
+        px[coords[0], coords[1]] = encode_in_pixel(tmp, px[coords[0], coords[1]])
+
+    image_bytes.save("output.png", "PNG")
+
+    return image_bytes
+
+
 def decode(image):
     im = Image.open(image)
     px = im.load()
 
-    data = ""
+    data = b""
 
     # Decode the contents of the hidden data
     for i in range(im.height):
@@ -98,7 +130,7 @@ def decode(image):
 
     header.magicnum = headerdata[0]
     header.size = headerdata[1]
-    header.fformat = headerdata[2].strip("\x00")
+    header.fformat = headerdata[2].strip(b"\x00")
 
     # Verify integrity of recovered data
     if header.magicnum != Header.magicnum:
@@ -108,8 +140,10 @@ def decode(image):
     data = data[4+Header.MAX_FORMAT_LENGTH:4+Header.MAX_FORMAT_LENGTH+header.size]
 
     print("Saving decoded output as {}".format("output"+os.extsep+header.fformat))
+    print(data)
     with open("output"+os.extsep+header.fformat, 'wb') as outf:
         outf.write(data)
+
 
 
 def save_image(image, filename):
@@ -117,4 +151,8 @@ def save_image(image, filename):
 
 
 def encode_and_save(image: Image, data_file: str, save_file: str):
-    save_image(encode(image, data_file), save_file)
+    save_image(encode_file(image, data_file), save_file)
+
+
+if __name__ == '__main__':
+    decode("output.png")
