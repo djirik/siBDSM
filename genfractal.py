@@ -38,7 +38,7 @@ def get_image(imgx=512, imgy=512):
                 if abs(z) > 2.0:
                     break 
                 z = z * z + c
-            im.putpixel((x, y), (i % 8 * 32, i % 16 * 16, i % 32 * 8, i % 16 * 8))
+            im.putpixel((x, y), (i % 16 * 32, i % 32 * 16, i % 8 * 16, i % 32 * 8))
     return im
     #im.save("juliaFr.png", "PNG")
 
