@@ -2,7 +2,6 @@ import split
 from genfractal import *
 from new_image import encode, save
 import random
-import json
 
 width = 1000
 height = 1000
