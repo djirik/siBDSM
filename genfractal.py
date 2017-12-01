@@ -6,6 +6,7 @@ import numpy as np
 def get_image(imgx=512, imgy=512):
     # imgx = 512
     # imgy = 512
+
     im = Image.new("RGBA", (imgx, imgy))
     #im_as_array = np.zeros((imgy, imgx), dtype=(b))
 
@@ -15,7 +16,9 @@ def get_image(imgx=512, imgy=512):
     ya = -1.5
     yb = 1.5
     maxIt = 255 # max iterations allowed
-
+    rand1 = random.choice([8,16,32])
+    rand2 = random.choice([8,16,32])
+    rand3 = random.choice([8,16,32])
     # find a good Julia set point using the Mandelbrot set
     while True:
         cx = random.random() * (xb - xa) + xa
@@ -39,7 +42,7 @@ def get_image(imgx=512, imgy=512):
                 if abs(z) > 2.0:
                     break 
                 z = z * z + c
-            im.putpixel((x, y), (i % 16 * 32, i % 32 * 16, i % 8 * 16, i % 32 * 8))
+            im.putpixel((x, y), (i % rand1 * 32, i % rand2 * 32, i % rand3 * 32, i % 32 * 16))
             #im_as_array
     return im
     #im.save("juliaFr.png", "PNG")
