@@ -1,4 +1,5 @@
 import struct
+import os
 from PIL import  Image
 
 class Header:
@@ -54,7 +55,7 @@ def encode(image: Image.Image, encbytes):
     for i in range(len(data)):
         if i == 999:
             print(i)
-        for
+        #for
         coords = (i % im.width, int(i / im.width))
         tmp = data[i]
         # byte = ord(tmp)
@@ -64,7 +65,13 @@ def encode(image: Image.Image, encbytes):
     return im
 
 
-def save(image: Image.Image, path='output.png'):
+def save(image: Image.Image, image_name,ind):
+    if not os.path.exists("tmp"):  # if the dir is not exist
+        os.mkdir("tmp")
+    elif ind ==0:
+        for fname in os.listdir("tmp"):
+            os.remove(os.path.join("tmp", fname))
+    path = "tmp/" + image_name + ".png"
     image.save(path, "PNG")
 
 
