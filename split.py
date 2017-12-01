@@ -1,31 +1,32 @@
 #!/usr/bin/python
 import sys, os
 
-#_chunk_Size = int(1.4 * 1000 * 1024)                            # Size of _Chunk_From_File
+# _chunk_Size = int(1.4 * 1000 * 1024)                            # Size of _Chunk_From_File
 
 
-def split(_File_to_Split, _Dir_To_Wtite_to, _chunk_Size):
-    if not os.path.exists(_Dir_To_Wtite_to):                    # if the dir is not exist
-        os.mkdir(_Dir_To_Wtite_to)                              # then create it
+def split(file_to_split, dir_to_write, chunk_size):
+    if not os.path.exists(dir_to_write):                    # if the dir is not exist
+        os.mkdir(dir_to_write)                              # then create it
     else:
-        for fname in os.listdir(_Dir_To_Wtite_to):              # if there are files in the directory
-            os.remove(os.path.join(_Dir_To_Wtite_to, fname))    # Delete them
-    _Number_of_Chunks = 0
-    input = open(_File_to_Split, 'rb')                          # open file as binary
+        for fname in os.listdir(dir_to_write):              # if there are files in the directory
+            os.remove(os.path.join(dir_to_write, fname))    # Delete them
+    number_of_chunks = 0
+    input = open(file_to_split, 'rb')                          # open file as binary
     _chunks = []
     while 1:                                                    # start spliting
-        _Chunk_From_File = input.read(_chunk_Size)              # read file at the size of the Chunk
+        _Chunk_From_File = input.read(chunk_size)              # read file at the size of the Chunk
         if not _Chunk_From_File: break
         _chunks.append(_Chunk_From_File)
 
-        _Number_of_Chunks = _Number_of_Chunks+1
-        # _Name_of_The_file = os.path.join(_Dir_To_Wtite_to, ('part%04d' % _Number_of_Chunks)) # Create a file with the current chunk order
+        number_of_chunks = number_of_chunks+1
+        # _Name_of_The_file = os.path.join(_Dir_To_Wtite_to, ('part%04d' % _Number_of_Chunks))
+        #  Create a file with the current chunk order
         # _File_To_Write_to = open(_Name_of_The_file, 'wb')              # Open the file in write binary mode
         # _File_To_Write_to.write(_Chunk_From_File)                       # Write to the file
         # _File_To_Write_to.close()                                       # close the file
     input.close()
-    assert _Number_of_Chunks <= 9999                                    # join sort fails if 5 digits
-    return (_Number_of_Chunks, _chunks)
+    assert number_of_chunks <= 9999                                    # join sort fails if 5 digits
+    return number_of_chunks, _chunks
 
 if __name__ == '__main__':
     if len(sys.argv) == 2 and sys.argv[1] == '-help':                   # if the argumet is not enough          

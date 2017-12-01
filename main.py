@@ -1,7 +1,4 @@
-import image
-import join
 import imgen
-import math
 import split
 import random
 
