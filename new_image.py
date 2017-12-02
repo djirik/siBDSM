@@ -1,7 +1,7 @@
 import struct
 import os
 from PIL import Image
-from bitstring import BitArray
+
 
 class Header:
     MAX_FORMAT_LENGTH = 8
@@ -52,7 +52,7 @@ def encode(image: Image.Image, encbytes):
     header.size = len(encbytes)
 
     header_data = struct.pack('4sI' + str(len(header.fformat)) + 's', header.magicnum,  header.size, header.fformat)
-
+    # print(len(header_data))
     data = header_data + encbytes
 
     for i in range(len(data)):
@@ -110,6 +110,6 @@ def decode(image: Image.Image):
     header.size = headerdata[1]
     header.fformat = headerdata[2].strip(b"\x00")
 
-    data = data[4 + Header.MAX_FORMAT_LENGTH:4 + Header.MAX_FORMAT_LENGTH + header.size-1]
-    print(data)
+    data = data[3 + Header.MAX_FORMAT_LENGTH:3 + Header.MAX_FORMAT_LENGTH + header.size]
+    # print(data)
     return data
