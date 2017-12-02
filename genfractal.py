@@ -48,7 +48,7 @@ def get_image(imgx=512, imgy=512):
     #im.save("juliaFr.png", "PNG")
 
 
-def get_images(width=512, height=512, amount=1):
+def get_images(width=512, height=512, amount=1) -> [Image.Image]:
     images = []
     for i in range(amount):
         images.append(get_image(width, height))
