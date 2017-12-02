@@ -3,12 +3,12 @@ from genfractal import *
 from new_image import encode, save, decode
 import random
 import os
-from AES import *
+from encryption import *
 
 width = 1024
 height = 1024
 
-def enc(file_path):
+def encode_file(file_path):
 
 
     # Suppose that we have 1000x1000px image
@@ -35,7 +35,7 @@ def enc(file_path):
     print(dic_list)
 
 
-def dec(dir_path, output_file):
+def decode_file(dir_path, output_file):
     data = b''
     dict_list = {0: '600e8c8feb015c1fb2a8f6f07e53902', 1: '4bb9f4e6724a97289d9a25ce9939f975',
                  2: 'aec57e547be34abaee6a71d7a5a0a09a', 3: '4950fd9068a6b145ba6469cc48d36013',
@@ -59,5 +59,5 @@ def dec(dir_path, output_file):
 
 
 if __name__ == '__main__':
-    #enc('test.mp4')
-    dec('tmp', 'decoded.mp4')
+    encode_file('test.mp4')
+    decode_file('tmp', 'decoded.mp4')
