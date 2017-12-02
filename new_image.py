@@ -109,5 +109,7 @@ def decode(image: Image.Image):
     header.magicnum = headerdata[0]
     header.size = headerdata[1]
     header.fformat = headerdata[2].strip(b"\x00")
+
+    data = data[4 + Header.MAX_FORMAT_LENGTH:4 + Header.MAX_FORMAT_LENGTH + header.size-1]
     print(data)
     return data
