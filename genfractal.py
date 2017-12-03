@@ -1,9 +1,10 @@
 from PIL import Image
 import random
-import numpy as np
+from multiprocessing.pool import ThreadPool
+from threading import Thread
 
 # image size
-def get_image(imgx=512, imgy=512):
+def get_image(result, index ,imgx=512, imgy=512):
     # imgx = 512
     # imgy = 512
 
@@ -42,14 +43,24 @@ def get_image(imgx=512, imgy=512):
                 if abs(z) > 2.0:
                     break 
                 z = z * z + c
-            im.putpixel((x, y), (i % rand1 * 32, i % rand2 * 32, i % rand3 * 32, i % 32 * 16))
+            im.putpixel((x, y), (i % rand1 * 32, i % rand2 * 32, i % rand3 * 32, 255))
             #im_as_array
+            result[index] = im
     return im
     #im.save("juliaFr.png", "PNG")
 
 
 def get_images(width=512, height=512, amount=1) -> [Image.Image]:
-    images = []
+    images = [Image.Image] * amount
+
+    threads = [None] * amount
+
+
     for i in range(amount):
-        images.append(get_image(width, height))
+        threads[i] = Thread(target=get_image, args=(images, i, width, height))
+        threads[i].start()
+
+    for i in range(amount):
+        threads[i].join()
+    print(images)
     return images
