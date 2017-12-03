@@ -5,6 +5,8 @@ import random
 import pickle
 from encryption import enc, dec
 import ast
+import os
+import time
 
 width = 1024
 height = 1024
@@ -52,7 +54,16 @@ def encode_file(file_path):
 def decode_file(dir_path, output_file):
     data = b''
     # dict_list = pickle.load(open('dic.img', 'rb'))
-    f = Image.open('tmp/111111.png')
+    # f = Image.open('tmp/111111.png')
+    maxim = 0
+    res = ''
+    for each in os.listdir(dir_path):
+        if os.path.getmtime(dir_path + '/' + each) > maxim:
+            maxim = os.path.getmtime(dir_path + '/' + each)
+            res = each
+    print(res)
+
+    f = Image.open(dir_path + '/' + res)
 
     dict_list = decode(f)
     dict_list = ast.literal_eval(dec(dict_list, cluch).decode())
@@ -70,5 +81,8 @@ def decode_file(dir_path, output_file):
 
 
 if __name__ == '__main__':
-    encode_file('test.txt')
-    # decode_file('tmp', 'decoded.txt')
+    start = time.time()
+    encode_file('test.mp4')
+    decode_file('tmp', 'decoded.mp4')
+    elapsed = time.time() - start
+    print(elapsed)
