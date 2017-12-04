@@ -1,7 +1,7 @@
 import struct
 import os
 from PIL import Image
-
+import multiprocessing
 
 class Header:
     MAX_FORMAT_LENGTH = 8
@@ -44,7 +44,7 @@ def decode_from_pixel(pixel):
     return result
 
 
-def encode(image: Image.Image, encbytes):
+def encode_fun(image , encbytes,enc_data_list=[],x=0):
     im = image
     px = im.load()
 
@@ -64,20 +64,41 @@ def encode(image: Image.Image, encbytes):
 
             px[coords[0], coords[1]] = encode_in_pixel(tmp, px[coords[0], coords[1]])
 
-    return im
+    enc_data_list[x] = im
+
+def encode(images, enc_data):
+    manager= multiprocessing.Manager()
+    jobs=[]
+    enc_data_list = manager.list(range(len(images)))
+    for x in range(len(images)):
+        p = multiprocessing.Process(target=encode_fun, args=(images[x],enc_data[x],enc_data_list,x))
+        jobs.append(p)
+        p.start()
+    for proc in jobs:
+        proc.join()
+    return enc_data_list
 
 
-def save(image: Image.Image, image_name, ind):
-    if not os.path.exists("tmp"):  # if the dir is not exist
-        os.mkdir("tmp")
-    elif ind == 0:
-        for fname in os.listdir("tmp"):
-            os.remove(os.path.join("tmp", fname))
+def save_fun(image, image_name):
     path = "tmp/" + image_name + ".png"
     image.save(path, "PNG")
 
+def save(image, img_hash, ind=0):
+    if not os.path.exists("tmp"):  # if the dir is not exist
+        os.mkdir("tmp")
 
-def decode(image: Image.Image):
+    jobs=[]
+    for x in range(len(image)):
+        if ind == 0:
+            for fname in os.listdir("tmp"):
+                os.remove(os.path.join("tmp", fname))
+        ind=1
+        p = multiprocessing.Process(target=save_fun, args=(image[x], img_hash[x]))
+        jobs.append(p)
+        p.start()
+    for proc in jobs:
+        proc.join()
+def decode_fun(image,dec_data_list,x):
     #im = Image.open(image)
     px = image.load()
 
@@ -112,4 +133,16 @@ def decode(image: Image.Image):
 
     data = data[3 + Header.MAX_FORMAT_LENGTH:3 + Header.MAX_FORMAT_LENGTH + header.size]
     # print(data)
-    return data
+    dec_data_list[x] = data
+
+def decode(images):
+    manager= multiprocessing.Manager()
+    jobs=[]
+    dec_data_list = manager.list(range(len(images)))
+    for x in range(len(images)):
+        p = multiprocessing.Process(target=decode_fun, args=(images[x],dec_data_list,x))
+        jobs.append(p)
+        p.start()
+    for proc in jobs:
+        proc.join()
+    return dec_data_list
